@@ -1,3 +1,5 @@
-# Azure Virtual Machine setup for multiple JupyterHub users
+# Setup Multiple Virtual Machines with Multiple JupyterHub User Accounts
 
-This repository shows an example of how to setup Azure VM (virtual machine) for multiple JupyterHub user accounts with an example repository and conda environment setup.
+This repository shows an example of deploying multiple Azure VM (Virtual Machine) with multiple JupyterHub user accounts.
+
+To make the deployment and management easy, we utilize Azure VMSS (Virtual Machine Scale Set) with DSVM (Data Science Virtual Machine) image. After the VMSS deployment, we invoke a shell script on each VM instance to create multiple JupyterHub user accounts with a desired conda environment.
