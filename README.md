@@ -1,6 +1,6 @@
-# Get Ready to Work with Linux (Virtual) Machines
+# Get Ready to Work on Linux (Virtual) Machines
 
-Setup a remote VM and *conda* for data science / python dev.
+Setup a linux machine for data science work & python dev.
 
 ## Table of Contents
 
@@ -24,7 +24,8 @@ Host {my_vm_name}
 ```
 
 ## 2. Beautify **bash**
-
+Copy .bashrc file to the home directory:
+`cp .bashrc ~/.bashrc`
 
 
 ## 3. Setup **git**
