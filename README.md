@@ -27,6 +27,7 @@ Host {my_vm_name}
 Copy .bashrc file to the home directory:
 `cp .bashrc ~/.bashrc`
 
+![](./prompt.png)
 
 ## 3. Setup **git**
 
