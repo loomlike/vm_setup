@@ -27,6 +27,14 @@ Host {my_vm_name}
 Copy .bashrc file to the home directory:
 `cp .bashrc ~/.bashrc`
 
+This will change the bash prompt to be:
+`current_conda_env:current_git_branch(if dir is a git repo) trimmed_working_dir $ `
+
+E.g.,
+`base:master ~/.../git/vm_setup $`
+
+The branch status will be shown as colors: clean - white, dirty - red, staged - yellow, committed - green:
+
 ![](./prompt.png)
 
 ## 3. Setup **git**
