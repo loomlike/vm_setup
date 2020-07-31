@@ -92,8 +92,9 @@ git_prompt() {
 }
 
 # CONDA_ENV:WORKING_DIR (BRANCH)$
+PROMPT_DIRTRIM=2
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[1;35m\]$CONDA_DEFAULT_ENV:\[\033[00m\]$(git_prompt) \[\033[1;34m\]$(basename $(dirname $PWD))/$(basename $PWD) \[\033[1;35m\]\$ \[\033[00m\]'
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[1;35m\]$CONDA_DEFAULT_ENV:\[\033[00m\]$(git_prompt) \[\033[1;34m\]\w \[\033[1;35m\]\$ \[\033[00m\]'
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -146,22 +147,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/jumin/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/jumin/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/jumin/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/jumin/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
-# Disable conda prompt change
+# Disable conda prompt change. TODO Put this after conda init lines
 conda config --set changeps1 false
 
 # To show date and weather:
