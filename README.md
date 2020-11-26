@@ -5,7 +5,7 @@ Setup a linux machine for data science work & python dev.
 ## Table of Contents
 
 1. Configure **ssh**
-2. Beautify **bash** 
+2. Beautify **bash**
 3. Setup **git**
 4. Config VScode
 5. Jupyter
@@ -13,7 +13,7 @@ Setup a linux machine for data science work & python dev.
     * Setup 100 VMs with a single script (feat. Azure VMSS)
 
 ## 1. Configure **ssh**
-
+To set ssh config:
 ```
 # ~/.ssh/config
 Host {my_vm_name}
@@ -21,6 +21,23 @@ Host {my_vm_name}
     User         {my_vm_account}
     LocalForward {port_to_tunnel} localhost:{port_to_tunnel}
     ForwardAgent yes
+```
+
+To change ssh port:
+```
+# 1. Set `Port`:
+sudo vi /etc/ssh/sshd_config
+
+# 2. Restart sshd service:
+sudo systemctl restart sshd
+
+# 3. Confirm change
+sudo netstat -tulpn | grep ssh
+
+# 4. (Optional) Add a rule to nsg (if use Azure VM)
+
+# 5. Connect by specifying the port
+ssh -p PORT_NUMBER USER_NAME@IP_ADDRESS
 ```
 
 ## 2. Beautify **bash**
