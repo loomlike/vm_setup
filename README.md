@@ -10,7 +10,8 @@ Setup a linux machine for data science work & python dev.
 4. Config VScode
 5. Jupyter
 6. Extras
-    * Setup 100 VMs with a single script (feat. Azure VMSS)
+    * Setup 100 VMs with a single script via Azure VMSS
+    * WSL (windows subsystem for linux)
 
 ## 1. Configure **ssh**
 To set ssh config:
@@ -87,7 +88,7 @@ jt -t grade3 -fs 95 -tfs 11 -nfs 115 -cellw 90% -T -N
 
 ## 6. Extras
 
-### 1) Setup 100 VMs with a single script (feat. Azure VMSS)
+### Setup 100 VMs with a single script via Azure VMSS
 
 This section shows how to setup multiple Azure Data Science Virtual Machines (DSVMs) with multiple user accounts.
 More specifically, it deploys Azure VMSS (Virtual Machine Scale Set) and invokes the post-deployment-script on each VM instance
@@ -95,3 +96,30 @@ to:
 1. Clone an example project repository,
 1. Setup conda environment for the project, and
 1. Create multiple JupyterHub users (Each user can access JupyterHub by opening `https://vm-ip-address:8000`)
+
+### WSL (windows subsystem for linux)
+
+- [Windows Terminal](https://github.com/microsoft/terminal) config
+    ```
+    "defaults":
+        {
+            "cursorColor" : "#ffdb59",
+            "cursorHeight" : 100,
+            "cursorShape" : "vintage",
+            "fontFace" : "Fira Code",
+            "fontSize" : 10,
+            "colorScheme": "One Half Dark"
+        },
+    ```
+- Transparent terminal by using AutoHotKey ([related thread](https://github.com/microsoft/terminal/issues/1753))
+    ```
+    #^Esc::
+     WinGet, TransLevel, Transparent, A
+     If (TransLevel = OFF) {
+       WinSet, Transparent, 200, A
+     } Else {
+       WinSet, Transparent, OFF, A
+     }
+    return
+    ```
+
