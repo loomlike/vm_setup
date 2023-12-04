@@ -150,6 +150,10 @@ fi
 # Disable conda prompt change. TODO Put this after conda init lines
 conda config --set changeps1 false
 
+# Add SSH key to the ssh-agent
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+
 # To show date and weather:
 date
 curl wttr.in/?0q
