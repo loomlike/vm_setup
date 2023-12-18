@@ -44,6 +44,11 @@ ssh -p PORT_NUMBER USER_NAME@IP_ADDRESS
 ## 2. Beautify **bash**
 Copy .bashrc file to the home directory:
 `cp .bashrc ~/.bashrc`
+> you may need to add the following line to `~/.bash_profile`:
+> ```
+> ... 
+> source ~/.bashrc
+> ```
 
 This will change the bash prompt to be:
 `current_conda_env:current_git_branch(if dir is a git repo) trimmed_working_dir $ `
@@ -54,6 +59,7 @@ E.g.,
 The branch status will be shown as colors: clean - white, dirty - red, staged - yellow, committed - green:
 
 ![](./prompt.png)
+
 
 ## 3. Setup **git**
 
@@ -85,8 +91,26 @@ pip install jupyterthemes
 jt -t grade3 -fs 95 -tfs 11 -nfs 115 -cellw 90% -T -N
 ```
 
+## 6. NVIDIA driver update
 
-## 6. Extras
+1. Remove any existing Nvidia packages:
+
+    `sudo apt-get remove --purge nvidia-*`
+
+1. Auto-remove unnecessary packages:
+
+    `sudo apt autoremove`
+
+1. Install the Nvidia driver:
+    `sudo apt-get install ubuntu-drivers-common`
+    
+    `sudo ubuntu-drivers autoinstall`
+
+1. Reboot your system:
+
+    `sudo reboot`
+
+## 7. Extras
 
 ### Setup 100 VMs with a single script via Azure VMSS
 
