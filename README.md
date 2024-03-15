@@ -14,18 +14,18 @@ Setup a linux machine for data science work & python dev.
     * WSL (windows subsystem for linux)
 
 ## 1. Configure **ssh**
-To set ssh config:
 ```
 # ~/.ssh/config
-Host {my_vm_name}
-    HostName     {my_vm_address}
-    User         {my_vm_account}
+Host {vm_name}
+    HostName     {vm_host_name_or_ip_address}
+    Port         {vm_ssh_port}
+    User         {vm_account}
     LocalForward {port_to_tunnel} localhost:{port_to_tunnel}
     ForwardAgent yes
 ```
 
-To change ssh port:
-```
+### Change ssh port
+```bash
 # 1. Set `Port`:
 sudo vi /etc/ssh/sshd_config
 
@@ -40,6 +40,16 @@ sudo netstat -tulpn | grep ssh
 # 5. Connect by specifying the port
 ssh -p PORT_NUMBER USER_NAME@IP_ADDRESS
 ```
+
+### Access VMs with VNet via Azure VPN
+
+Follow [Azure work-remotely-support doc](https://learn.microsoft.com/en-us/azure/vpn-gateway/work-remotely-support)
+
+1. Create a VNet, subnet, and [vnet gateway](https://learn.microsoft.com/en-us/azure/vpn-gateway/tutorial-create-gateway-portal)
+2. [Configure point-to-site VPN](https://learn.microsoft.com/en-us/azure/vpn-gateway/openvpn-azure-ad-tenant) on the gateway
+3. Download and distribute the VPN client configuration
+4. Distribute the certificates
+5. Connect to Azure VPN
 
 ## 2. Beautify **bash**
 Copy .bashrc file to the home directory:
