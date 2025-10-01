@@ -51,6 +51,14 @@ Follow [Azure work-remotely-support doc](https://learn.microsoft.com/en-us/azure
 4. Distribute the certificates
 5. Connect to Azure VPN
 
+## Alternative 1. Setup GCM (Git Credential Manager)
+```
+git config --global credential.helper "/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe"
+
+```
+git config --global credential.https://dev.azure.com.useHttpPath true
+```
+
 ## 2. Beautify **bash**
 Copy .bashrc file to the home directory:
 `cp .bashrc ~/.bashrc`
