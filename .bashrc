@@ -147,6 +147,40 @@ if ! shopt -oq posix; then
   fi
 fi
 
+print_cow() {
+    msg="$1"
+
+    # Split message into lines
+    IFS=$'\n' read -rd '' -a lines <<<"$msg"
+
+    # Find the longest line
+    max_len=0
+    for line in "${lines[@]}"; do
+        (( ${#line} > max_len )) && max_len=${#line}
+    done
+
+    # Build top border
+    border=$(printf '%*s' "$((max_len+2))" '' | tr ' ' '-')
+    echo " $border"
+
+    # Print each line padded
+    for line in "${lines[@]}"; do
+        printf "< %-*s >\n" "$max_len" "$line"
+    done
+
+    # Bottom border
+    echo " $border"
+
+    # The cow
+    cat << "EOF"
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+EOF
+}
+
 # Disable conda prompt change. TODO Put this after conda init lines
 conda config --set changeps1 false
 
@@ -155,5 +189,6 @@ eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa
 
 # To show date and weather:
-date
-curl wttr.in/?0q
+curl wttr.in/?0q                                                                                                                                                                                
+print_cow "$(date +"%a %b %-d %Y                                                                                                                                                                
+%H:%M %Z")"
