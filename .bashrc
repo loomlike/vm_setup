@@ -93,10 +93,20 @@ git_prompt() {
 
 # CONDA_ENV:WORKING_DIR (BRANCH)$
 PROMPT_DIRTRIM=2
+
+env_prompt() {
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        # Get the parent directory name of the venv
+        echo "($(basename "$(dirname "$VIRTUAL_ENV")"))"
+    elif [[ -n "$CONDA_DEFAULT_ENV" ]]; then
+        echo "($CONDA_DEFAULT_ENV)"
+    fi
+}
+
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[1;35m\]$CONDA_DEFAULT_ENV:\[\033[00m\]$(git_prompt) \[\033[1;34m\]\w \[\033[1;35m\]\$ \[\033[00m\]'
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[1;35m\]$(env_prompt)\[\033[00m\] $(git_prompt) \[\033[1;34m\]\w \[\033[1;35m\]\$ \[\033[00m\]'
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    PS1='${debian_chroot:+($debian_chroot)}$(env_prompt) $(git_prompt) \w \$ '
 fi
 unset color_prompt force_color_prompt
 
