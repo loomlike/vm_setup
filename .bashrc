@@ -91,23 +91,28 @@ git_prompt() {
     fi
 }
 
-# CONDA_ENV:WORKING_DIR (BRANCH)$
-PROMPT_DIRTRIM=2
-
+# Helper to show venv or conda env (venv takes priority)
 env_prompt() {
+    local env_name=""
     if [[ -n "$VIRTUAL_ENV" ]]; then
-        # Get the parent directory name of the venv
-        echo "($(basename "$(dirname "$VIRTUAL_ENV")"))"
+        env_name="$(basename "$(dirname "$VIRTUAL_ENV")")"
     elif [[ -n "$CONDA_DEFAULT_ENV" ]]; then
-        echo "($CONDA_DEFAULT_ENV)"
+        env_name="$CONDA_DEFAULT_ENV"
+    fi
+    if [[ -n "$env_name" ]]; then
+        if [ ${#env_name} -gt 10 ]; then
+            env_name="${env_name:0:7}..."
+        fi
+        echo "($env_name) "
     fi
 }
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[1;35m\]$(env_prompt)\[\033[00m\] $(git_prompt) \[\033[1;34m\]\w \[\033[1;35m\]\$ \[\033[00m\]'
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[1;35m\]$(env_prompt)\[\033[00m\]$(git_prompt) \[\033[1;34m\]\w \[\033[1;35m\]\$ \[\033[00m\]'
 else
-    PS1='${debian_chroot:+($debian_chroot)}$(env_prompt) $(git_prompt) \w \$ '
+    PS1='${debian_chroot:+($debian_chroot)}$(env_prompt)$(git_prompt) \w \$ '
 fi
+
 unset color_prompt force_color_prompt
 
 # If this is an xterm, set the terminal title to user@host:dir
@@ -158,31 +163,57 @@ if ! shopt -oq posix; then
 fi
 
 print_cow() {
-    msg="$1"
+    local msg="$1"
+    local -a lines=()
+    local trimmed sanitized
+    local visible_len max_len=0
 
-    # Split message into lines
-    IFS=$'\n' read -rd '' -a lines <<<"$msg"
+    # Read message line-by-line (preserves final non-terminated line too)
+    while IFS= read -r line || [ -n "$line" ]; do
+        # Remove carriage returns, then trim leading/trailing whitespace (bash-only)
+        line=${line//$'\r'/}
+        # trim leading
+        line="${line#"${line%%[![:space:]]*}"}"
+        # trim trailing
+        line="${line%"${line##*[![:space:]]}"}"
 
-    # Find the longest line
-    max_len=0
-    for line in "${lines[@]}"; do
-        (( ${#line} > max_len )) && max_len=${#line}
-    done
+        lines+=("$line")
 
-    # Build top border
-    border=$(printf '%*s' "$((max_len+2))" '' | tr ' ' '-')
-    echo " $border"
+        # Compute visible length: strip common ANSI CSI sequences for measurement
+        # Keep the original line intact so colors still display when printing.
+        sanitized=$(printf '%s' "$line" | sed -r 's/\x1B\[[0-9;?]*[a-zA-Z]//g')
 
-    # Print each line padded
-    for line in "${lines[@]}"; do
-        printf "< %-*s >\n" "$max_len" "$line"
+        # visible_len uses character count (works with UTF-8 in typical shells/locales)
+        visible_len=${#sanitized}
+        (( visible_len > max_len )) && max_len=$visible_len
+    done <<< "$msg"
+
+    # Build top border (max_len visible chars plus two spaces inside the box)
+    local border
+    border=$(printf '%*s' "$((max_len + 2))" '' | tr ' ' '-')
+    printf ' %s\n' "$border"
+
+    # Print each line padded to visible width so '>' aligns.
+    local i pad
+    for i in "${!lines[@]}"; do
+        trimmed=${lines[i]}
+        sanitized=$(printf '%s' "$trimmed" | sed -r 's/\x1B\[[0-9;?]*[a-zA-Z]//g')
+        visible_len=${#sanitized}
+        pad=$((max_len - visible_len))
+        # Print: "< " + content + (pad spaces) + " >"
+        # We use two printf calls so that any ANSI escapes in $trimmed do not affect padding measurement.
+        printf '< %s' "$trimmed"
+        if (( pad > 0 )); then
+            printf '%*s' "$pad" ''
+        fi
+        printf ' >\n'
     done
 
     # Bottom border
-    echo " $border"
+    printf ' %s\n' "$border"
 
-    # The cow
-    cat << "EOF"
+    # Cow ASCII
+    cat <<'EOF'
         \   ^__^
          \  (oo)\_______
             (__)\       )\/\
@@ -191,14 +222,20 @@ print_cow() {
 EOF
 }
 
-# Disable conda prompt change. TODO Put this after conda init lines
+# >>> conda initialize >>>
+# TODO: Move your 'conda init' output from end of the file to here
+# <<< conda initialize <<<
 conda config --set changeps1 false
 
-# Add SSH key to the ssh-agent
+# Not show venv to the prompt since we handle that
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+# Add SSH agent and keys
 eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_rsa
+# ssh-add ~/.ssh/id_rsa
 
 # To show date and weather:
-curl wttr.in/?0q                                                                                                                                                                                
-print_cow "$(date +"%a %b %-d %Y                                                                                                                                                                
+weather="$(curl --max-time 5 wttr.in/?0q 2>/dev/null)"
+print_cow "$weather
+$(date +"%a %b %-d %Y
 %H:%M %Z")"
