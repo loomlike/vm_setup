@@ -6,10 +6,11 @@ Setup a linux machine for data science work & python dev.
 
 1. Configure **ssh**
 2. Beautify **bash**
-3. Setup **git**
-4. Config VScode
-5. Jupyter
-6. Extras
+3. WSL
+4. Setup **git**
+5. Config VScode
+6. Jupyter
+7. Extras
     * Setup 100 VMs with a single script via Azure VMSS
     * WSL (windows subsystem for linux)
 
@@ -78,8 +79,12 @@ The branch status will be shown as colors: clean - white, dirty - red, staged - 
 
 ![](./prompt.png)
 
+## 3. WSL
 
-## 3. Setup **git**
+Enable integration with Windows browsers (so that one can use interactive az logins):
+`sudo apt install xdg-utils wslu` 
+
+## 4. Setup **git**
 
 ```
 git config --global user.name {my_name}
@@ -87,9 +92,9 @@ git config --global user.email {my_github_email}
 git config --global core.editor "vi"
 ```
 
-## 4. VScode for **python**
+## 5. VScode for **python**
 
-## 5. Jupyter
+## 6. Jupyter
 ```
 jupyter notebook --generate-config
 
@@ -109,7 +114,7 @@ pip install jupyterthemes
 jt -t grade3 -fs 95 -tfs 11 -nfs 115 -cellw 90% -T -N
 ```
 
-## 6. NVIDIA driver update
+## 7. NVIDIA driver update
 
 1. Remove any existing Nvidia packages:
 
@@ -128,7 +133,7 @@ jt -t grade3 -fs 95 -tfs 11 -nfs 115 -cellw 90% -T -N
 
     `sudo reboot`
 
-## 7. Extras
+## . Extras
 
 ### Setup 100 VMs with a single script via Azure VMSS
 
